@@ -4,12 +4,12 @@
       <div class="logo">
         <el-image src="https://wallpapercave.com/wp/wp2775554.png" fit="cover" :lazy="true"></el-image>
       </div>
-      <el-form>
+      <el-form ref="formRef" :model="form">
         <el-form-item>
-          <el-input class="input" placeholder="用户名" prefix-icon="User" />
+          <el-input class="input" v-model="form.username" placeholder="用户名" prefix-icon="User" />
         </el-form-item>
         <el-form-item>
-          <el-input class="input" placeholder="密码" prefix-icon="Lock" />
+          <el-input class="input" v-model="form.password" placeholder="密码" prefix-icon="Lock" />
         </el-form-item>
         <div class="btns">
           <el-button type="primary" class="btn">登录</el-button>
@@ -21,6 +21,16 @@
 </template>
 
 <stript setup lang="ts">
+import { ref } from 'vue'
+interface Form {
+  username: string;
+  password: string;
+}
+const form = ref<Form>({
+  username: "",
+  password: "",
+});
+const formRef = ref<FormInstance>()
 
 export default {
 
@@ -67,7 +77,7 @@ export default {
     }
     .btns {
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
 
       .btn {
