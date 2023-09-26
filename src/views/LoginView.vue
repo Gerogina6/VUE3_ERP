@@ -12,7 +12,7 @@
           <el-input class="input" v-model="form.password" placeholder="密码" prefix-icon="Lock" />
         </el-form-item>
         <div class="btns">
-          <el-button type="primary" class="btn">登录</el-button>
+          <el-button type="primary" class="btn" @click="login">登录</el-button>
           <div class="btn reset" @click="reset">重置</div>
         </div>
       </el-form>
@@ -20,19 +20,19 @@
   </div>
 </template>
 
-<stript setup lang="ts">
-import { log } from 'console';
-import { ref } from 'vue'
-import type { FormIntance } from "element-plus"
-import { rules } from "@/rules/userinfo"
+<script setup lang="ts">
+import { ref } from 'vue';
+import type { FormInstance } from "element-plus"
+import { rules } from "../rules/userinfo"
+import { loginApi } from '../apis/login';
 
 interface Form {
   username: string;
   password: string;
 }
 const form = ref<Form>({
-  username: "admin",
-  password: "admin",
+  username: "",
+  password: "",
 });
 const formRef = ref<FormInstance>()
 const login = async () => {
@@ -41,9 +41,9 @@ const login = async () => {
 }
 
 const reset = () => {
-  formRef.value.resetFields()
+  formRef.value?.resetFields()
 }
-</stript>
+</script>
 
 <style lang="scss" scoped>
 #login {
