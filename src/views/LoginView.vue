@@ -4,16 +4,16 @@
       <div class="logo">
         <el-image src="https://wallpapercave.com/wp/wp2775554.png" fit="cover" :lazy="true"></el-image>
       </div>
-      <el-form ref="formRef" :model="form">
-        <el-form-item>
+      <el-form ref="formRef" :model="form" :rules="rules">
+        <el-form-item prop="username">
           <el-input class="input" v-model="form.username" placeholder="用户名" prefix-icon="User" />
         </el-form-item>
-        <el-form-item>
+        <el-form-item prop="password">
           <el-input class="input" v-model="form.password" placeholder="密码" prefix-icon="Lock" />
         </el-form-item>
         <div class="btns">
           <el-button type="primary" class="btn">登录</el-button>
-          <div class="btn reset">重置</div>
+          <div class="btn reset" @click="reset">重置</div>
         </div>
       </el-form>
     </div>
@@ -21,19 +21,27 @@
 </template>
 
 <stript setup lang="ts">
+import { log } from 'console';
 import { ref } from 'vue'
+import type { FormIntance } from "element-plus"
+import { rules } from "@/rules/userinfo"
+
 interface Form {
   username: string;
   password: string;
 }
 const form = ref<Form>({
-  username: "",
-  password: "",
+  username: "admin",
+  password: "admin",
 });
 const formRef = ref<FormInstance>()
+const login = async () => {
+  const res = await loginApi(form.value)
+  console.log(res)
+}
 
-export default {
-
+const reset = () => {
+  formRef.value.resetFields()
 }
 </stript>
 
