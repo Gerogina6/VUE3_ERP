@@ -35,8 +35,8 @@ interface Form {
   password: string;
 }
 const form = ref<Form>({
-  username: "",
-  password: "",
+  username: "admin ",
+  password: "admin",
 });
 
 const formRef = ref<FormInstance>()
