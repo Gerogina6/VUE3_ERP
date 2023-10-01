@@ -10,7 +10,7 @@ export type BkResponse = {
     succeed: true;
 };
 
-// 设置请求跟路径
+// 设置请求根路径
 httpInstance.defaults.baseURL = import.meta.env.VITE_BASEURL;
 
 // 配置响应拦截器
@@ -20,7 +20,7 @@ export const $http = async(config: AxiosRequestConfig) => {
         const axiosResponse = await httpInstance<BkResponse>(config);
         const bkResponse = axiosResponse.data
 
-        if (!bkResponse.succeed) {
+        if (!bkResponse?.succeed) {
             let errTitle: string = 'Error';
             if (bkResponse.code === 401) {
                 errTitle = 'Unauthorized';

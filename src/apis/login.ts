@@ -1,4 +1,4 @@
-import { $http } from './index';
+import { $http } from '.';
 
 // 登录
 export const loginApi = (data: { password: string; username: string }) => {
