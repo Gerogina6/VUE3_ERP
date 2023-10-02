@@ -25,7 +25,7 @@ import { ref } from 'vue';
 import type { FormInstance } from "element-plus"
 import { ElMessage } from 'element-plus'
 import { rules } from "../rules/userinfo"
-import { loginApi } from '../apis/login';
+import { loginApi } from '@/apis/login';
 import { useUserInfoStore } from '../stores/userinfo.store'
 import router from '../router';
 

@@ -1,7 +1,14 @@
 import axios, { AxiosError } from 'axios';
 import type { AxiosRequestConfig } from 'axios';
 import { ElMessage,ElLoading } from 'element-plus';
-export const httpInstance = axios.create();
+// 创建axios实例
+export const httpInstance = axios.create({
+    // 服务接口请求
+    baseURL: import.meta.env.VITE_BASEURL,
+    // 超时设置
+    timeout: 5000,
+    headers: {'Content-Type': 'application/json; charset=utf-8'}
+});
 
 export type BkResponse = {
     data: any;
@@ -11,7 +18,7 @@ export type BkResponse = {
 };
 
 // 设置请求根路径
-httpInstance.defaults.baseURL = import.meta.env.VITE_BASEURL;
+// httpInstance.defaults.baseURL = import.meta.env.VITE_BASEURL;
 
 // 配置响应拦截器
 export const $http = async(config: AxiosRequestConfig) => {
