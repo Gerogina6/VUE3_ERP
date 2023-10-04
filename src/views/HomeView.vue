@@ -10,15 +10,17 @@
             <AdminMenu></AdminMenu>
           </el-aside>
         </el-affix>
-        <el-main>Main</el-main>
+        <el-main>
+          <RouterView></RouterView>
+        </el-main>
       </el-container>
     </el-container>
   </div>
 </template>
 
 <script setup lang="ts">
-import AdminHeader from '../componests/layout/AdminHeader.vue'
-import AdminMenu from '../componests/layout/AdminMenu.vue'
+import AdminHeader from '@/components/layout/AdminHeader.vue'
+import AdminMenu from '@/components/layout/AdminMenu.vue'
 </script>
 
 <style lang="scss" scoped>
