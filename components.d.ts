@@ -35,7 +35,7 @@ declare module 'vue' {
     IconEcosystem: typeof import('./src/components/icons/IconEcosystem.vue')['default']
     IconSupport: typeof import('./src/components/icons/IconSupport.vue')['default']
     IconTooling: typeof import('./src/components/icons/IconTooling.vue')['default']
-    LineChart: typeof import('./src/components/home/adminHome/lineChart.vue')['default']
+    LineChart: typeof import('./src/components/home/adminHome/LineChart.vue')['default']
     PieChart: typeof import('./src/components/home/adminHome/PieChart.vue')['default']
     PieCharts: typeof import('./src/components/home/adminHome/pieCharts.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
