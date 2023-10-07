@@ -1,4 +1,5 @@
 import axios, { AxiosError } from 'axios';
+import router from '@/router'
 import type { AxiosRequestConfig } from 'axios';
 import { ElMessage,ElLoading } from 'element-plus';
 // 创建axios实例
@@ -32,6 +33,7 @@ export const $http = async(config: AxiosRequestConfig) => {
             if (bkResponse.code === 401) {
                 errTitle = 'Unauthorized';
                 ElMessage.error('未授权')
+                router.push('login')
             } else if (bkResponse.code === 403 ) {
                 errTitle = 'Forbidden'
             } else if (bkResponse.code === 9999) {
