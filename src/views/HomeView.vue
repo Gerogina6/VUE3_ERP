@@ -5,11 +5,11 @@
         <AdminHeader></AdminHeader>
       </el-header>
       <el-container>
-        <el-affix>
-          <el-aside width="200px">
+        <el-aside width="200px">
+          <el-affix>
             <AdminMenu></AdminMenu>
-          </el-aside>
-        </el-affix>
+          </el-affix>
+        </el-aside>
         <el-main>
           <RouterView></RouterView>
         </el-main>
