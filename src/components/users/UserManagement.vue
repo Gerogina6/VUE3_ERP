@@ -12,8 +12,32 @@
                         <el-button :icon="Search" @click="handleSearch" />
                     </template>
                 </el-input>
-                <el-button type="danger" size="default" @click="disableUsers">批量禁用</el-button>
-                <el-button type="primary" size="default" @click="enableUsers">批量解禁</el-button>
+                <el-popconfirm
+                    width="220"
+                    confirm-button-text="确认"
+                    cancel-button-text="取消"
+                    :icon="InfoFilled"
+                    icon-color="#626AEF"
+                    title="你确定要禁用这些用户吗?"
+                    @confirm="disableUsers"
+                >
+                    <template #reference>
+                        <el-button type="danger" size="default">批量禁用</el-button>
+                    </template>
+                </el-popconfirm>
+                <el-popconfirm
+                    width="220"
+                    confirm-button-text="确认"
+                    cancel-button-text="取消"
+                    :icon="InfoFilled"
+                    icon-color="#626AEF"
+                    title="你确定要解禁这些用户吗?"
+                    @confirm="enableUsers"
+                >
+                    <template #reference>
+                        <el-button type="danger" size="default">批量解禁</el-button>
+                    </template>
+                </el-popconfirm>
             </div>
 
             <el-table :data="searchRes.length ? searchRes : tableData" @selection-change="handleChange">
@@ -40,13 +64,17 @@
                 <el-table-column label="禁用状态">
                     <template #default="scope">
                         <div style="display: flex; align-items: center">
-                            <el-switch v-model="scope.row.status" />
+                            <el-switch
+                                style="--el-switch-on-color: #ff4949"
+                                v-model="scope.row.status" 
+                                @change="toggleUsers([scope.row.id])"
+                            />
                         </div>
                     </template>
                 </el-table-column>
                 <el-table-column label="Operations">
-                    <template #default="scope">
-                        <el-button size="small" @click="handleEdit(scope.$index, scope.row)">Edit</el-button>
+                    <template>
+                        <el-button size="small">Edit</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -65,7 +93,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { ArrowRight, Search } from '@element-plus/icons-vue'
+import { ArrowRight, Search, InfoFilled } from '@element-plus/icons-vue'
 import { getUserlistApi, disableOrEndisaleUserApi } from '@/apis/users'
 import { ElMessage } from 'element-plus'
 const keyword = ref<string>()
@@ -97,21 +125,31 @@ const handleChange = (val:User[]) => {
   selectedUsers.value = val
 }
 
-// 批量禁用（筛选未被禁用的用户数组）
-const disableUsers = async() => {
-    selectedUsers.value = selectedUsers.value.filter((user) => !user.status)
-    const ids = selectedUsers.value.map((user) => user.id)
+// 获取用户id
+const getUserid = (users:User[]) => {
+    return users.map((user) => user.id)
+}
+// 切换用户禁用状态
+const toggleUsers = async(ids?: number[]) => {
+    const targetIds = ids ? ids : getUserid(selectedUsers.value)
+    if(!targetIds.length) {
+        ElMessage.error('未选择任何用户！')
+        return
+    }
     const res = await disableOrEndisaleUserApi(ids)
     ElMessage.success(res.message)
     getUserlist()
 }
+
+// 批量禁用（筛选未被禁用的用户数组）
+const disableUsers = async() => {
+    selectedUsers.value = selectedUsers.value.filter((user) => !user.status)
+    toggleUsers()
+}
 // 批量解禁（筛选已经被禁用的用户数组）
 const enableUsers = async() => {
     selectedUsers.value = selectedUsers.value.filter((user) => user.status)
-    const ids = selectedUsers.value.map((user) => user.id)
-    const res = await disableOrEndisaleUserApi(ids)
-    ElMessage.success(res.message)
-    getUserlist()
+   toggleUsers()
 }
 // 搜索用户
 const searchRes = ref<User[]>([])
