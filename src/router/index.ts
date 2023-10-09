@@ -23,7 +23,7 @@ const router = createRouter({
         {
           path:'users',
           name: 'users',
-          component: () => import('@/components/users/UsersManagement.vue')
+          component: () => import('@/components/users/UserManagement.vue')
         },
         {
           path:'goods',
