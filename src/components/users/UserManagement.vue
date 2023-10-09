@@ -7,14 +7,17 @@
 
         <el-card>
             <div class="header">
-                <el-input v-model="keyword" placeholder="请输入" class="input">
+                <el-input v-model="keyword" placeholder="请输入" class="input" clearable>
                     <template #append>
-                        <el-button :icon="Search" />
+                        <el-button :icon="Search" @click="handleSearch" />
                     </template>
                 </el-input>
+                <el-button type="danger" size="default" @click="disableUsers">批量禁用</el-button>
+                <el-button type="primary" size="default" @click="enableUsers">批量解禁</el-button>
             </div>
 
-            <el-table :data="tableData">
+            <el-table :data="searchRes.length ? searchRes : tableData" @selection-change="handleChange">
+                <el-table-column type="selection" width="55" />
                 <el-table-column prop="id" label="id" width="55px"></el-table-column>
                 <el-table-column prop="username" label="用户名"></el-table-column>
                 <el-table-column prop="nickname" label="昵称"></el-table-column>
@@ -63,7 +66,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { ArrowRight, Search } from '@element-plus/icons-vue'
-import { getUserlistApi } from '@/apis/users'
+import { getUserlistApi, disableOrEndisaleUserApi } from '@/apis/users'
+import { ElMessage } from 'element-plus'
 const keyword = ref<string>()
 const query = ref({
     pageSize: 5,
@@ -86,9 +90,35 @@ interface User {
     updateTime: Date;
     username: string;
 }
+// 选择的用户
+const selectedUsers = ref<User[]>([])
 
-const handleEdit = (index: number, row: User) => {
-  console.log(index, row)
+const handleChange = (val:User[]) => {
+  selectedUsers.value = val
+}
+
+// 批量禁用（筛选未被禁用的用户数组）
+const disableUsers = async() => {
+    selectedUsers.value = selectedUsers.value.filter((user) => !user.status)
+    const ids = selectedUsers.value.map((user) => user.id)
+    const res = await disableOrEndisaleUserApi(ids)
+    ElMessage.success(res.message)
+    getUserlist()
+}
+// 批量解禁（筛选已经被禁用的用户数组）
+const enableUsers = async() => {
+    selectedUsers.value = selectedUsers.value.filter((user) => user.status)
+    const ids = selectedUsers.value.map((user) => user.id)
+    const res = await disableOrEndisaleUserApi(ids)
+    ElMessage.success(res.message)
+    getUserlist()
+}
+// 搜索用户
+const searchRes = ref<User[]>([])
+const handleSearch = () => {
+    searchRes.value = tableData.value.filter((user) => 
+        user.username.toLocaleLowerCase().indexOf(keyword.value.toLocaleLowerCase())!= -1
+    )
 }
 
 const tableData = ref<User[]>([])
@@ -111,6 +141,7 @@ getUserlist()
     .header {
         .input {
             width: 30%;
+            margin-right: 10px
         }
     }
     .el-pagination {
