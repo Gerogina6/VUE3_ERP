@@ -9,7 +9,7 @@
           <el-input class="input" v-model="form.username" placeholder="用户名" prefix-icon="User" />
         </el-form-item>
         <el-form-item prop="password">
-          <el-input class="input" v-model="form.password" placeholder="密码" prefix-icon="Lock" />
+          <el-input class="input" type="password" v-model="form.password" placeholder="密码" prefix-icon="Lock" />
         </el-form-item>
         <div class="btns">
           <el-button type="primary" class="btn" @click="login">登录</el-button>

@@ -72,9 +72,9 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column label="Operations">
-                    <template>
-                        <el-button size="small">Edit</el-button>
+                <el-table-column label="操作">
+                    <template #default="scope">
+                        <el-button size="small" @click="openEditFormDialog(scope.row)">编辑</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -88,14 +88,38 @@
                 @current-change="getUserlist"
             />
         </el-card>
+
+        <el-button text @click="dialogFormVisible = true">
+            open a Form nested Dialog
+        </el-button>
+
+        <el-dialog v-model="dialogFormVisible" title="修改用户信息" width="400px">
+            <el-form ref="editFormRef" :model="editForm" :rules="rules">
+            <el-form-item label="昵称" prop="nicknName">
+                <el-input v-model="editForm.nicknName" autocomplete="off" />
+            </el-form-item>
+            <el-form-item label="手机" prop="phoneNumber">
+                <el-input v-model="editForm.phoneNumber" autocomplete="off" />
+            </el-form-item>
+            </el-form>
+            <template #footer>
+            <span class="dialog-footer">
+                <el-button @click="dialogFormVisible = false">取消</el-button>
+                <el-button type="primary" @click="handleEdit">
+                确认
+                </el-button>
+            </span>
+            </template>
+        </el-dialog>
     </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import { ArrowRight, Search, InfoFilled } from '@element-plus/icons-vue'
-import { getUserlistApi, disableOrEndisaleUserApi } from '@/apis/users'
-import { ElMessage } from 'element-plus'
+import { getUserlistApi, disableOrEndisaleUserApi, updateUserApi } from '@/apis/users'
+import { ElMessage, FormInstance } from 'element-plus'
+import { rules } from '@/rules/userinfo' 
 const keyword = ref<string>()
 const query = ref({
     pageSize: 5,
@@ -121,8 +145,38 @@ interface User {
 // 选择的用户
 const selectedUsers = ref<User[]>([])
 
+// 编辑用户信息的dialog
+const dialogFormVisible = ref<boolean>(false)
+// 编辑用户表单
+interface EditForm {
+    nicknName: string;
+    phoneNumber: string;
+}
+const editForm  = ref<EditForm>({
+    nicknName: '',
+    phoneNumber: '',
+})
+
 const handleChange = (val:User[]) => {
   selectedUsers.value = val
+}
+
+// 打开编辑用户dialog
+const editUserId = ref<number>(-1)
+const editFormRef = ref<FormInstance>()
+const openEditFormDialog = (row:User) => {
+    dialogFormVisible.value = true
+    editForm.value.nicknName = row.nickname
+    editForm.value.phoneNumber = row.phoneNumber
+    editUserId.value = row.id
+}
+// 更新用户信息
+const handleEdit = async() => {
+    await editFormRef.value?.validate()
+    await updateUserApi(editUserId.value, editForm.value)
+    ElMessage.success('修改用户信息成功！')
+    dialogFormVisible.value = false
+    getUserlist()
 }
 
 // 获取用户id
