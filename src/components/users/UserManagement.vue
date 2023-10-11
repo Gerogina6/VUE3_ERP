@@ -118,7 +118,8 @@
 import { ref } from 'vue'
 import { ArrowRight, Search, InfoFilled } from '@element-plus/icons-vue'
 import { getUserlistApi, disableOrEndisaleUserApi, updateUserApi } from '@/apis/users'
-import { ElMessage, FormInstance } from 'element-plus'
+import { ElMessage } from 'element-plus'
+import type {FormInstance } from 'element-plus'
 import { rules } from '@/rules/userinfo' 
 const keyword = ref<string>()
 const query = ref({
@@ -173,6 +174,7 @@ const openEditFormDialog = (row:User) => {
 // 更新用户信息
 const handleEdit = async() => {
     await editFormRef.value?.validate()
+    // @ts-ignore
     await updateUserApi(editUserId.value, editForm.value)
     ElMessage.success('修改用户信息成功！')
     dialogFormVisible.value = false
@@ -190,6 +192,7 @@ const toggleUsers = async(ids?: number[]) => {
         ElMessage.error('未选择任何用户！')
         return
     }
+    // @ts-ignore
     const res = await disableOrEndisaleUserApi(ids)
     ElMessage.success(res.message)
     getUserlist()
@@ -209,6 +212,7 @@ const enableUsers = async() => {
 const searchRes = ref<User[]>([])
 const handleSearch = () => {
     searchRes.value = tableData.value.filter((user) => 
+        // @ts-ignore
         user.username.toLocaleLowerCase().indexOf(keyword.value.toLocaleLowerCase())!= -1
     )
 }
